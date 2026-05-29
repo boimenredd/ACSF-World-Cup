@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACSF World Cup 2026 — Group Stage Draw</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap');
+
+        :root {
+            --gold:      #c9a535;
+            --gold-lt:   #f5d76e;
+            --gold-dk:   #8a6a10;
+            --bg:        #0b0c0e;
+            --card:      #1a1a1c;
+            --card2:     #111113;
+            --slot-bg:   #1e1e20;
+            --slot-fill: #2a2520;
+            --dim:       #555;
+            --white:     #f0ede8;
+            --border:    rgba(201,165,53,0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--white);
+            font-family: 'Barlow Condensed', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* ── BACKGROUND LIGHT STREAKS (like the broadcast) ── */
+        .bg-streaks {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-streaks::before {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 80%;
+            height: 70%;
+            background: conic-gradient(from 30deg at 20% 90%, transparent 0deg, rgba(201,165,53,0.06) 8deg, transparent 16deg, transparent 30deg, rgba(201,165,53,0.04) 38deg, transparent 46deg);
+            filter: blur(1px);
+        }
+        .bg-streaks::after {
+            content: '';
+            position: absolute;
+            bottom: -5%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: conic-gradient(from -20deg at 80% 85%, transparent 0deg, rgba(201,165,53,0.05) 10deg, transparent 20deg, transparent 35deg, rgba(201,165,53,0.03) 45deg, transparent 55deg);
+            filter: blur(1px);
+        }
+        .streak {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201,165,53,0.5), rgba(255,220,80,0.8), rgba(201,165,53,0.3), transparent);
+            transform-origin: left center;
+        }
+
+        /* ── TOP BAR ── */
+        .topbar {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 18px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 100%);
+            border-bottom: 1px solid rgba(201,165,53,0.2);
+            flex-shrink: 0;
+            min-height: 54px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .topbar-left img {
+            height: 42px;
+            width: auto;
+        }
+        .topbar-title {
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar-title .org {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5em;
+            letter-spacing: 5px;
+            color: var(--gold-lt);
+            line-height: 1;
+        }
+        .topbar-title .sub {
+            font-size: 0.6em;
+            letter-spacing: 4px;
+            color: var(--gold-dk);
+            font-weight: 300;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+
+        .topbar-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        #status {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1em;
+            letter-spacing: 4px;
+            color: var(--gold-lt);
+            text-align: right;
+        }
+
+        .btn-row { display: flex; gap: 6px; }
+
+        button {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 2px;
+            font-size: 0.85em;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 5px 18px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+        }
+        button:hover:not(:disabled) { background: var(--gold-lt); }
+        button:active { transform: scale(0.97); }
+        button:disabled { background: #2a2820; color: #444; cursor: default; }
+        button.sec {
+            background: transparent;
+            border: 1px solid rgba(201,165,53,0.5);
+            color: var(--gold);
+            clip-path: none;
+        }
+        button.sec:hover:not(:disabled) { background: rgba(201,165,53,0.1); }
+
+        /* ── MAIN AREA ── */
+        .main {
+            position: relative;
+            z-index: 5;
+            flex: 1;
+            display: flex;
+            gap: 0;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        /* ── LEFT PANEL: POT LIST ── */
+        .pot-panel {
+            width: 230px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(10,8,5,0.9) 100%);
+            border-right: 1px solid rgba(201,165,53,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .pot-block {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid rgba(201,165,53,0.12);
+            min-height: 0;
+        }
+        .pot-block:last-child { border-bottom: none; }
+
+        .pot-block-header {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+
+        .pot-number-box {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            color: #000;
+            background: var(--gold);
+            padding: 3px 10px;
+            display: flex;
+            align-items: center;
+            line-height: 1;
+            min-width: 60px;
+            justify-content: center;
+        }
+
+        .pot-entries {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 2px 0;
+        }
+
+        .pot-entry {
+            display: flex;
+            align-items: center;
+            height: 26px;
+            padding: 0 8px;
+            font-size: 0.72em;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            transition: opacity 0.4s, filter 0.4s;
+            background: linear-gradient(90deg, rgba(201,165,53,0.08), transparent);
+            border-left: 2px solid rgba(201,165,53,0.3);
+            margin: 1px 4px 1px 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .pot-entry img {
+            width: 22px;
+            height: 15px;
+            object-fit: contain;
+            margin-right: 7px;
+            flex-shrink: 0;
+        }
+        .pot-entry.empty-entry {
+            color: #333;
+            font-style: italic;
+            border-left-color: #222;
+        }
+        .pot-entry.drawn {
+            opacity: 0.15;
+            filter: grayscale(1);
+        }
+
+        /* ── CENTER: WC EMBLEM ── */
+        .center-emblem {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .center-emblem img {
+            height: 55%;
+            max-height: 240px;
+            opacity: 0.12;
+            filter: grayscale(0.3);
+        }
+
+        /* ── BOTTOM: GROUPS GRID ── */
+        .groups-panel {
+            position: relative;
+            z-index: 5;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.92));
+            border-top: 2px solid rgba(201,165,53,0.35);
+            flex-shrink: 0;
+            padding: 8px 12px 10px;
+        }
+
+        .progress-wrap {
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 8px;
+        }
+        #progress-bar {
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold-dk), var(--gold), var(--gold-lt));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 7px;
+        }
+
+        .group-card {
+            background: var(--card2);
+            border: 1px solid rgba(201,165,53,0.18);
+            overflow: hidden;
+        }
+
+        .group-card-header {
+            background: linear-gradient(90deg, #1c1810, #2a2215);
+            border-bottom: 1px solid rgba(201,165,53,0.25);
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 0;
+        }
+
+        .group-letter {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.85em;
+            letter-spacing: 3px;
+            color: var(--gold-lt);
+            padding: 4px 8px;
+            line-height: 1;
+        }
+        .group-word {
+            font-size: 0.55em;
+            letter-spacing: 2px;
+            color: var(--gold-dk);
+            font-weight: 300;
+            text-transform: uppercase;
+            padding-left: 2px;
+        }
+
+        .group-slots { }
+
+        .slot {
+            display: flex;
+            align-items: center;
+            height: 28px;
+            padding: 0 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.68em;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            background: var(--slot-bg);
+            transition: background 0.25s, color 0.25s;
+        }
+        .slot:last-child { border-bottom: none; }
+
+        .slot img {
+            width: 20px;
+            height: 13px;
+            object-fit: contain;
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+
+        .slot.empty {
+            background: linear-gradient(90deg, #161614, #111);
+            color: #2e2e2e;
+        }
+
+        /* Slot label when empty */
+        .slot-label {
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            color: #2a2a2a;
+            font-weight: 400;
+            font-family: 'Barlow Condensed', sans-serif;
+        }
+
+        .slot.newly-drawn {
+            background: #fff !important;
+            color: #000 !important;
+            font-weight: 700;
+        }
+        .slot.filled { background: var(--slot-fill); }
+
+        /* pot stripe */
+        .slot.p1 { border-left: 3px solid #c0392b; }
+        .slot.p2 { border-left: 3px solid #2980b9; }
+        .slot.p3 { border-left: 3px solid #27ae60; }
+        .slot.p4 { border-left: 3px solid #8e44ad; }
+
+        /* highlighted group card */
+        .group-card.draw-target {
+            border-color: rgba(201,165,53,0.8);
+            box-shadow: 0 0 12px rgba(201,165,53,0.25);
+        }
+
+        /* ── FLASH OVERLAY ── */
+        .draw-flash {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 75%, rgba(201,165,53,0.2), transparent 65%);
+            opacity: 0;
+            z-index: 50;
+        }
+        .draw-flash.pop { animation: flashpop 0.5s ease-out forwards; }
+        @keyframes flashpop {
+            0%   { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-streaks" id="bg-streaks"></div>
+<div class="draw-flash" id="flash"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="topbar-left">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/250px-2026_FIFA_World_Cup_emblem.svg.png"
+             onerror="this.style.display='none'" alt="WC2026">
+        <div class="topbar-title">
+            <span class="org">ACSF World Cup 2026</span>
+            <span class="sub">Group Stage Draw &nbsp;·&nbsp; 6 Groups of 4 &nbsp;·&nbsp; 4 Pots</span>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <div id="status">READY TO BEGIN DRAW</div>
+        <div class="btn-row">
+            <button id="drawBtn" onclick="drawNextTeam()">Draw Next</button>
+            <button class="sec" onclick="drawAll()">Draw All</button>
+            <button class="sec" onclick="resetDraw()">Reset</button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main">
+
+    <!-- LEFT: POT PANEL -->
+    <div class="pot-panel" id="pot-panel">
+        <!-- Pot blocks injected by JS -->
+    </div>
+
+    <!-- CENTER: FADED EMBLEM -->
+    <div class="center-emblem">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/250px-2026_FIFA_World_Cup_emblem.svg.png"
+             onerror="this.style.display='none'" alt="">
+    </div>
+
+</div>
+
+<!-- BOTTOM: GROUPS GRID -->
+<div class="groups-panel">
+    <div class="progress-wrap"><div id="progress-bar"></div></div>
+    <div class="groups-grid" id="groups-grid"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  TEAM DATA — add teams here when logos/pots are ready
+//  Format: { name: "Country", logo: "url", pot: 1|2|3|4 }
+//
+//  CONSTRAINTS:
+//    Poland    cannot be in Group A or B  (indices 0, 1)
+//    Argentina cannot be in Group C or D  (indices 2, 3)
+//    USA       cannot be in Group E or F  (indices 4, 5)
+// ═══════════════════════════════════════════════════════════════
+
+const TEAMS = [
+    // ── POT 1 ── (6 teams)
+    // { name: "USA",       logo: "https://...", pot: 1 },
+
+    // ── POT 2 ── (6 teams)
+    // { name: "Argentina", logo: "https://...", pot: 2 },
+
+    // ── POT 3 ── (6 teams)
+    // { name: "Poland",    logo: "https://...", pot: 3 },
+
+    // ── POT 4 ── (6 teams)
+    // { name: "...",       logo: "https://...", pot: 4 },
+];
+
+const CONSTRAINTS = {
+    "Poland":    [0, 1],
+    "Argentina": [2, 3],
+    "USA":       [4, 5],
+};
+
+// ═══════════════════════════════════════════════════════════════
+const GROUPS = ['A','B','C','D','E','F'];
+const POT_COLORS = ['#c0392b','#2980b9','#27ae60','#8e44ad'];
+
+let groups = [[],[],[],[],[],[]];
+let drawQueue = [];
+let drawIndex = 0;
+let totalTeams = 0;
+let autoDrawInterval = null;
+
+function teamsInPot(p) { return TEAMS.filter(t => t.pot === p); }
+function safeid(n) { return n.replace(/[^a-zA-Z0-9]/g,'_'); }
+
+// ── BACKGROUND STREAKS ──
+function buildStreaks() {
+    const container = document.getElementById('bg-streaks');
+    const streakData = [
+        { bottom: '12%', left: '-5%', width: '55%', angle: '-18deg', opacity: 0.55 },
+        { bottom: '18%', left: '-5%', width: '45%', angle: '-22deg', opacity: 0.3 },
+        { bottom: '8%',  left: '-5%', width: '40%', angle: '-14deg', opacity: 0.2 },
+        { bottom: '28%', right: '-5%', width: '50%', angle: '16deg',  opacity: 0.4, fromRight: true },
+        { bottom: '20%', right: '-5%', width: '38%', angle: '20deg',  opacity: 0.2, fromRight: true },
+    ];
+    streakData.forEach(s => {
+        const el = document.createElement('div');
+        el.className = 'streak';
+        el.style.cssText = `
+            bottom: ${s.bottom};
+            ${s.fromRight ? `right: ${s.right}` : `left: ${s.left}`};
+            width: ${s.width};
+            opacity: ${s.opacity};
+            transform: rotate(${s.angle});
+        `;
+        container.appendChild(el);
+    });
+}
+
+// ── BUILD DRAW QUEUE WITH BACKTRACKING ──
+function buildDrawQueue() {
+    drawQueue = [];
+    let localGroups = [[],[],[],[],[],[]];
+
+    function pickDraw(pot) {
+        const available = teamsInPot(pot).slice();
+        for (let i = available.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [available[i], available[j]] = [available[j], available[i]];
+        }
+        const assignments = new Array(available.length).fill(-1);
+        const groupUsed = new Array(6).fill(false);
+
+        function bt(idx) {
+            if (idx === available.length) return true;
+            const team = available[idx];
+            const gOrder = [...Array(6).keys()].sort(() => Math.random() - 0.5);
+            for (const g of gOrder) {
+                if (groupUsed[g]) continue;
+                if (localGroups[g].some(t => t.pot === pot)) continue;
+                if (localGroups[g].length >= 4) continue;
+                const forbidden = CONSTRAINTS[team.name] || [];
+                if (forbidden.includes(g)) continue;
+                assignments[idx] = g;
+                groupUsed[g] = true;
+                localGroups[g].push(team);
+                if (bt(idx + 1)) return true;
+                localGroups[g].pop();
+                groupUsed[g] = false;
+                assignments[idx] = -1;
+            }
+            return false;
+        }
+        if (!bt(0)) return false;
+        const draws = available.map((team, i) => ({ team, group: assignments[i] }));
+        draws.sort((a, b) => a.group - b.group);
+        return draws;
+    }
+
+    for (let attempt = 0; attempt < 20; attempt++) {
+        localGroups = [[],[],[],[],[],[]];
+        let all = [], ok = true;
+        for (const pot of [1,2,3,4]) {
+            if (!teamsInPot(pot).length) continue;
+            const res = pickDraw(pot);
+            if (!res) { ok = false; break; }
+            res.forEach(d => { if (!localGroups[d.group].some(t=>t.name===d.team.name)) localGroups[d.group].push(d.team); });
+            all = all.concat(res.map(d => ({...d, pot})));
+        }
+        if (ok) { drawQueue = all; return true; }
+    }
+    return false;
+}
+
+// ── INIT ──
+function init() {
+    totalTeams = TEAMS.length;
+    buildStreaks();
+
+    // Build pot panel
+    const panel = document.getElementById('pot-panel');
+    panel.innerHTML = '';
+    [1,2,3,4].forEach(pot => {
+        const teams = teamsInPot(pot);
+        const block = document.createElement('div');
+        block.className = 'pot-block';
+        let entriesHTML = '';
+        if (teams.length === 0) {
+            entriesHTML = `<div class="pot-entry empty-entry">— No teams yet —</div>`;
+        } else {
+            teams.forEach(t => {
+                entriesHTML += `<div class="pot-entry" id="pi-${safeid(t.name)}">
+                    ${t.logo ? `<img src="${t.logo}" onerror="this.style.display='none'">` : ''}
+                    ${t.name}
+                </div>`;
+            });
+        }
+        block.innerHTML = `
+            <div class="pot-block-header">
+                <div class="pot-number-box" style="background:${POT_COLORS[pot-1]}">POT ${pot}</div>
+            </div>
+            <div class="pot-entries">${entriesHTML}</div>
+        `;
+        panel.appendChild(block);
+    });
+
+    // Build groups grid
+    const grid = document.getElementById('groups-grid');
+    grid.innerHTML = '';
+    GROUPS.forEach((g, i) => {
+        const card = document.createElement('div');
+        card.className = 'group-card';
+        card.id = `group-card-${i}`;
+        card.innerHTML = `
+            <div class="group-card-header">
+                <span class="group-word">GROUP</span>
+                <span class="group-letter">&nbsp;${g}</span>
+            </div>
+            <div class="group-slots">
+                <div class="slot empty" id="g${i}-s0"><span class="slot-label">POT 1</span></div>
+                <div class="slot empty" id="g${i}-s1"><span class="slot-label">POT 2</span></div>
+                <div class="slot empty" id="g${i}-s2"><span class="slot-label">POT 3</span></div>
+                <div class="slot empty" id="g${i}-s3"><span class="slot-label">POT 4</span></div>
+            </div>`;
+        grid.appendChild(card);
+    });
+
+    groups = [[],[],[],[],[],[]];
+    drawIndex = 0;
+    if (TEAMS.length > 0) buildDrawQueue();
+    updateProgress();
+
+    const hasTeams = TEAMS.length > 0;
+    document.getElementById('drawBtn').disabled = !hasTeams;
+    document.getElementById('status').innerText = hasTeams ? 'READY TO BEGIN DRAW' : 'ADD TEAMS TO BEGIN';
+}
+
+function updateProgress() {
+    const pct = totalTeams > 0 ? (drawIndex / totalTeams) * 100 : 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function flashEffect() {
+    const f = document.getElementById('flash');
+    f.classList.remove('pop');
+    void f.offsetWidth;
+    f.classList.add('pop');
+}
+
+function highlightCard(gIdx) {
+    document.querySelectorAll('.group-card').forEach(c => c.classList.remove('draw-target'));
+    const card = document.getElementById(`group-card-${gIdx}`);
+    if (card) {
+        card.classList.add('draw-target');
+        setTimeout(() => card.classList.remove('draw-target'), 1400);
+    }
+}
+
+function placeTeam(team, gIdx) {
+    const slot = document.getElementById(`g${gIdx}-s${team.pot - 1}`);
+    if (!slot) return;
+    slot.className = `slot p${team.pot} newly-drawn`;
+    slot.innerHTML = `${team.logo ? `<img src="${team.logo}" onerror="this.style.display='none'">` : ''}${team.name}`;
+    setTimeout(() => { slot.classList.remove('newly-drawn'); slot.classList.add('filled'); }, 900);
+
+    const pi = document.getElementById(`pi-${safeid(team.name)}`);
+    if (pi) pi.classList.add('drawn');
+
+    groups[gIdx].push(team);
+    highlightCard(gIdx);
+    flashEffect();
+}
+
+function drawNextTeam() {
+    if (drawIndex >= drawQueue.length) return;
+    const { team, group: gIdx } = drawQueue[drawIndex++];
+    placeTeam(team, gIdx);
+    document.getElementById('status').innerText = `${team.name}  →  GROUP ${GROUPS[gIdx]}`;
+    updateProgress();
+    if (drawIndex >= drawQueue.length) {
+        document.getElementById('drawBtn').disabled = true;
+        setTimeout(() => document.getElementById('status').innerText = '✦  DRAW COMPLETE  ✦', 700);
+    }
+}
+
+function drawAll() {
+    if (autoDrawInterval) return;
+    const delay = TEAMS.length <= 24 ? 340 : 220;
+    autoDrawInterval = setInterval(() => {
+        if (drawIndex >= drawQueue.length) { clearInterval(autoDrawInterval); autoDrawInterval = null; return; }
+        drawNextTeam();
+    }, delay);
+}
+
+function resetDraw() {
+    if (autoDrawInterval) { clearInterval(autoDrawInterval); autoDrawInterval = null; }
+    init();
+}
+
+init();
+</script>
+</body>
+</html>
