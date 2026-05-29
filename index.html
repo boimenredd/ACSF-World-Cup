@@ -34,14 +34,12 @@
         /* ── BG STREAKS ── */
         .bg-streaks { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
         .bg-streaks::before {
-            content: '';
-            position: absolute; bottom: -10%; left: -5%; width: 80%; height: 70%;
+            content: ''; position: absolute; bottom: -10%; left: -5%; width: 80%; height: 70%;
             background: conic-gradient(from 30deg at 20% 90%, transparent 0deg, rgba(201,165,53,0.06) 8deg, transparent 16deg, transparent 30deg, rgba(201,165,53,0.04) 38deg, transparent 46deg);
             filter: blur(1px);
         }
         .bg-streaks::after {
-            content: '';
-            position: absolute; bottom: -5%; right: -10%; width: 60%; height: 60%;
+            content: ''; position: absolute; bottom: -5%; right: -10%; width: 60%; height: 60%;
             background: conic-gradient(from -20deg at 80% 85%, transparent 0deg, rgba(201,165,53,0.05) 10deg, transparent 20deg, transparent 35deg, rgba(201,165,53,0.03) 45deg, transparent 55deg);
             filter: blur(1px);
         }
@@ -71,26 +69,50 @@
             font-size: 0.6em; letter-spacing: 4px; color: var(--gold-dk);
             font-weight: 300; text-transform: uppercase; line-height: 1.4;
         }
-        .topbar-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .topbar-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
         #status {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 1em; letter-spacing: 4px; color: var(--gold-lt); text-align: right;
+            min-height: 1.2em;
         }
-        .btn-row { display: flex; gap: 6px; }
+        .btn-row { display: flex; gap: 6px; align-items: center; }
+
+        /* ── BUTTONS ── */
         button {
-            font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-size: 0.85em;
-            background: var(--gold); color: #000; border: none; padding: 5px 18px; cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
-            clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+            font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-size: 0.9em;
+            background: var(--gold); color: #000; border: none; padding: 7px 22px; cursor: pointer;
+            transition: background 0.15s, transform 0.1s, opacity 0.2s;
+            clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+            white-space: nowrap;
         }
         button:hover:not(:disabled) { background: var(--gold-lt); }
-        button:active { transform: scale(0.97); }
+        button:active:not(:disabled) { transform: scale(0.97); }
         button:disabled { background: #2a2820; color: #444; cursor: default; }
+
         button.sec {
-            background: transparent; border: 1px solid rgba(201,165,53,0.5);
-            color: var(--gold); clip-path: none;
+            background: transparent;
+            border: 1px solid rgba(201,165,53,0.45);
+            color: var(--gold);
+            clip-path: none;
+            font-size: 0.78em;
+            padding: 5px 14px;
         }
-        button.sec:hover:not(:disabled) { background: rgba(201,165,53,0.1); }
+        button.sec:hover:not(:disabled) { background: rgba(201,165,53,0.08); }
+
+        /* big action button — pulses when waiting for click */
+        #actionBtn {
+            font-size: 1em;
+            padding: 8px 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        #actionBtn.pulse {
+            animation: btnpulse 1.6s ease-in-out infinite;
+        }
+        @keyframes btnpulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(201,165,53,0); }
+            50%       { box-shadow: 0 0 14px 4px rgba(201,165,53,0.45); }
+        }
 
         /* ── MAIN AREA ── */
         .main {
@@ -104,25 +126,24 @@
             background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(10,8,5,0.9) 100%);
             border-right: 1px solid rgba(201,165,53,0.2);
             display: flex; flex-direction: column; overflow: hidden;
-            position: relative;
         }
 
-        /* Pre-draw: all 4 pots stacked */
         .pot-block {
             flex: 1; display: flex; flex-direction: column;
             border-bottom: 1px solid rgba(201,165,53,0.12); min-height: 0;
-            transition: opacity 0.4s, max-height 0.4s;
+            transition: flex 0.45s ease, opacity 0.35s ease, max-height 0.45s ease;
+            overflow: hidden;
         }
         .pot-block:last-child { border-bottom: none; }
 
-        /* During draw: hide non-active pots, expand active */
         .pot-block.inactive {
-            opacity: 0; max-height: 0; overflow: hidden;
-            flex: 0; border-bottom: none; pointer-events: none;
+            flex: 0 0 0px;
+            opacity: 0;
+            max-height: 0;
+            border-bottom: none;
+            pointer-events: none;
         }
-        .pot-block.active-pot {
-            flex: 1;
-        }
+        .pot-block.active-pot { flex: 1; }
 
         .pot-block-header {
             display: flex; align-items: center;
@@ -130,8 +151,8 @@
         }
         .pot-number-box {
             font-family: 'Bebas Neue', sans-serif; font-size: 1.1em; letter-spacing: 2px;
-            color: #000; padding: 3px 10px; display: flex; align-items: center;
-            line-height: 1; min-width: 60px; justify-content: center;
+            color: #000; padding: 3px 10px; line-height: 1;
+            min-width: 60px; text-align: center;
         }
         .pot-entries {
             flex: 1; overflow: hidden; display: flex;
@@ -140,17 +161,16 @@
         .pot-entry {
             display: flex; align-items: center; height: 26px; padding: 0 8px;
             font-size: 0.72em; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
-            transition: opacity 0.4s, filter 0.4s, background 0.3s;
+            transition: opacity 0.5s, filter 0.5s, background 0.3s, border-color 0.3s;
             background: linear-gradient(90deg, rgba(201,165,53,0.08), transparent);
             border-left: 2px solid rgba(201,165,53,0.3);
             margin: 1px 4px 1px 0; white-space: nowrap; overflow: hidden;
         }
         .pot-entry img { width: 22px; height: 15px; object-fit: contain; margin-right: 7px; flex-shrink: 0; }
         .pot-entry.empty-entry { color: #333; font-style: italic; border-left-color: #222; }
-        .pot-entry.drawn { opacity: 0.15; filter: grayscale(1); }
-        /* Highlight the just-drawn entry briefly */
-        .pot-entry.just-drawn {
-            background: rgba(201,165,53,0.25);
+        .pot-entry.drawn { opacity: 0.14; filter: grayscale(1); }
+        .pot-entry.current {
+            background: rgba(201,165,53,0.22);
             border-left-color: var(--gold-lt);
         }
 
@@ -160,7 +180,7 @@
             position: relative; overflow: hidden;
         }
 
-        /* Default: WC logo watermark */
+        /* WC logo shown before draw starts / between pots */
         .center-wc-logo {
             position: absolute; inset: 0;
             display: flex; align-items: center; justify-content: center;
@@ -169,48 +189,57 @@
         .center-wc-logo img { height: 55%; max-height: 240px; opacity: 0.12; filter: grayscale(0.3); }
         .center-wc-logo.hidden { opacity: 0; pointer-events: none; }
 
-        /* Team reveal card */
+        /* "POT X" announcement overlay shown when a new pot begins */
+        .pot-announce {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 6px;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .pot-announce.visible { opacity: 1; }
+        .pot-announce-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1em; letter-spacing: 6px; color: var(--gold-dk);
+        }
+        .pot-announce-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 7em; line-height: 0.85;
+            letter-spacing: 12px;
+            color: var(--gold-lt);
+            text-shadow: 0 0 60px rgba(201,165,53,0.5);
+        }
+
+        /* Team reveal */
         .team-reveal {
             position: absolute; inset: 0;
             display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 16px;
-            opacity: 0;
-            transform: scale(0.88);
-            transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34,1.5,0.64,1);
+            align-items: center; justify-content: center; gap: 14px;
+            opacity: 0; transform: scale(0.9);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.4,0.64,1);
             pointer-events: none;
         }
-        .team-reveal.visible {
-            opacity: 1; transform: scale(1);
-        }
+        .team-reveal.visible { opacity: 1; transform: scale(1); }
         .team-reveal.exit {
-            opacity: 0; transform: scale(1.06);
-            transition: opacity 0.25s ease, transform 0.25s ease;
+            opacity: 0; transform: scale(1.05);
+            transition: opacity 0.22s ease, transform 0.22s ease;
         }
 
         .team-reveal-img {
-            max-height: 52%;
-            max-width: 70%;
-            object-fit: contain;
-            filter: drop-shadow(0 0 30px rgba(201,165,53,0.4));
+            max-height: 50%; max-width: 68%; object-fit: contain;
+            filter: drop-shadow(0 0 28px rgba(201,165,53,0.35));
         }
-
         .team-reveal-name {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.4em;
-            letter-spacing: 8px;
+            font-size: 2.5em; letter-spacing: 8px;
             color: var(--white);
-            text-shadow: 0 0 30px rgba(201,165,53,0.6);
-            text-align: center;
-            line-height: 1;
+            text-shadow: 0 0 28px rgba(201,165,53,0.5);
+            text-align: center; line-height: 1;
         }
-
         .team-reveal-group {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.1em;
-            letter-spacing: 6px;
-            color: var(--gold);
-            text-align: center;
+            font-size: 1.05em; letter-spacing: 6px;
+            color: var(--gold); text-align: center;
         }
 
         /* ── BOTTOM GROUPS ── */
@@ -231,10 +260,7 @@
             background: var(--card2); border: 1px solid rgba(201,165,53,0.18); overflow: hidden;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
-        .group-card.draw-target {
-            border-color: rgba(201,165,53,0.8);
-            box-shadow: 0 0 12px rgba(201,165,53,0.25);
-        }
+        .group-card.draw-target { border-color: rgba(201,165,53,0.8); box-shadow: 0 0 12px rgba(201,165,53,0.25); }
         .group-card-header {
             background: linear-gradient(90deg, #1c1810, #2a2215);
             border-bottom: 1px solid rgba(201,165,53,0.25);
@@ -269,10 +295,10 @@
         /* ── FLASH ── */
         .draw-flash {
             position: fixed; inset: 0; pointer-events: none;
-            background: radial-gradient(circle at 50% 45%, rgba(201,165,53,0.22), transparent 65%);
+            background: radial-gradient(circle at 50% 45%, rgba(201,165,53,0.2), transparent 65%);
             opacity: 0; z-index: 50;
         }
-        .draw-flash.pop { animation: flashpop 0.6s ease-out forwards; }
+        .draw-flash.pop { animation: flashpop 0.55s ease-out forwards; }
         @keyframes flashpop { 0% { opacity: 1; } 100% { opacity: 0; } }
     </style>
 </head>
@@ -292,10 +318,9 @@
         </div>
     </div>
     <div class="topbar-right">
-        <div id="status">READY TO BEGIN DRAW</div>
+        <div id="status">PRESS START TO BEGIN</div>
         <div class="btn-row">
-            <button id="drawBtn" onclick="drawNextTeam()">Draw Next</button>
-            <button class="sec" onclick="drawAll()">Draw All</button>
+            <button id="actionBtn" class="pulse" onclick="handleAction()">Start Draw</button>
             <button class="sec" onclick="resetDraw()">Reset</button>
         </div>
     </div>
@@ -303,29 +328,31 @@
 
 <!-- MAIN AREA -->
 <div class="main">
-
-    <!-- LEFT: POT PANEL -->
     <div class="pot-panel" id="pot-panel"></div>
 
-    <!-- CENTER: REVEAL AREA -->
     <div class="center-area">
-        <!-- WC logo shown before any draw -->
+        <!-- Default WC logo -->
         <div class="center-wc-logo" id="center-wc-logo">
             <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/250px-2026_FIFA_World_Cup_emblem.svg.png"
                  onerror="this.style.display='none'" alt="">
         </div>
 
-        <!-- Team image + name revealed on each draw -->
+        <!-- "POT X" announcement when a new pot begins -->
+        <div class="pot-announce" id="pot-announce">
+            <div class="pot-announce-label">NOW DRAWING</div>
+            <div class="pot-announce-number" id="pot-announce-number">1</div>
+        </div>
+
+        <!-- Team reveal after slot animation completes -->
         <div class="team-reveal" id="team-reveal">
             <img class="team-reveal-img" id="reveal-img" src="" alt="">
             <div class="team-reveal-name" id="reveal-name"></div>
             <div class="team-reveal-group" id="reveal-group"></div>
         </div>
     </div>
-
 </div>
 
-<!-- BOTTOM: GROUPS -->
+<!-- BOTTOM GROUPS -->
 <div class="groups-panel">
     <div class="progress-wrap"><div id="progress-bar"></div></div>
     <div class="groups-grid" id="groups-grid"></div>
@@ -334,28 +361,19 @@
 <script>
 // ═══════════════════════════════════════════════════════════════
 //  TEAM DATA
-//  Format: { name: "Country", logo: "url", image: "url", pot: 1|2|3|4 }
-//    logo  = small flag/badge shown in slots & pot list
-//    image = large team image shown in the center reveal
+//  { name, logo, image, pot }
+//    logo  = small flag/crest in slots & pot list
+//    image = large image shown in center after slot fills
 //
-//  CONSTRAINTS (group indices: 0=A … 5=F):
-//    Poland    cannot be in Group A or B  → [0,1]
-//    Argentina cannot be in Group C or D  → [2,3]
-//    USA       cannot be in Group E or F  → [4,5]
+//  CONSTRAINTS (0=A … 5=F):
+//    Poland    → cannot be in A or B  [0,1]
+//    Argentina → cannot be in C or D  [2,3]
+//    USA       → cannot be in E or F  [4,5]
 // ═══════════════════════════════════════════════════════════════
-
 const TEAMS = [
-    // ── POT 1 ──
     // { name: "USA",       logo: "https://...", image: "https://...", pot: 1 },
-
-    // ── POT 2 ──
     // { name: "Argentina", logo: "https://...", image: "https://...", pot: 2 },
-
-    // ── POT 3 ──
     // { name: "Poland",    logo: "https://...", image: "https://...", pot: 3 },
-
-    // ── POT 4 ──
-    // { name: "...",       logo: "https://...", image: "https://...", pot: 4 },
 ];
 
 const CONSTRAINTS = {
@@ -365,38 +383,25 @@ const CONSTRAINTS = {
 };
 
 // ═══════════════════════════════════════════════════════════════
-const GROUPS    = ['A','B','C','D','E','F'];
+const GROUPS     = ['A','B','C','D','E','F'];
 const POT_COLORS = ['#c0392b','#2980b9','#27ae60','#8e44ad'];
+const SLOT_ANIM_MS = 900;   // how long the white flash holds before reveal
 
-let groups          = [[],[],[],[],[],[]];
-let drawQueue       = [];
-let drawIndex       = 0;
-let totalTeams      = 0;
-let autoDrawInterval = null;
-let drawHasStarted  = false;   // tracks if any draw has happened
-let currentPot      = 1;       // which pot is currently being drawn from
+// ── State machine ──
+// phase: 'idle' | 'pot-announce' | 'drawing' | 'pot-done' | 'complete'
+let phase        = 'idle';
+let drawQueue    = [];
+let drawIndex    = 0;
+let currentPot   = 0;
+let totalTeams   = 0;
+let locked       = false;   // blocks button while animation plays
+let groups       = [[],[],[],[],[],[]];
 
 function teamsInPot(p) { return TEAMS.filter(t => t.pot === p); }
-function safeid(n)      { return n.replace(/[^a-zA-Z0-9]/g, '_'); }
+function safeid(n)      { return n.replace(/[^a-zA-Z0-9]/g,'_'); }
+function potsInQueue()  { return [...new Set(drawQueue.map(d => d.pot))].sort(); }
 
-// ── STREAKS ──
-function buildStreaks() {
-    const c = document.getElementById('bg-streaks');
-    [
-        { bottom:'12%', left:'-5%',  width:'55%', angle:'-18deg', opacity:0.55 },
-        { bottom:'18%', left:'-5%',  width:'45%', angle:'-22deg', opacity:0.3  },
-        { bottom:'8%',  left:'-5%',  width:'40%', angle:'-14deg', opacity:0.2  },
-        { bottom:'28%', right:'-5%', width:'50%', angle:'16deg',  opacity:0.4, fromRight:true },
-        { bottom:'20%', right:'-5%', width:'38%', angle:'20deg',  opacity:0.2, fromRight:true },
-    ].forEach(s => {
-        const el = document.createElement('div');
-        el.className = 'streak';
-        el.style.cssText = `bottom:${s.bottom};${s.fromRight?`right:${s.right}`:`left:${s.left}`};width:${s.width};opacity:${s.opacity};transform:rotate(${s.angle});`;
-        c.appendChild(el);
-    });
-}
-
-// ── DRAW QUEUE ──
+// ── BUILD QUEUE ──
 function buildDrawQueue() {
     drawQueue = [];
     let localGroups = [[],[],[],[],[],[]];
@@ -426,8 +431,8 @@ function buildDrawQueue() {
             return false;
         }
         if (!bt(0)) return false;
-        const draws = available.map((team, i) => ({ team, group: assignments[i] }));
-        draws.sort((a, b) => a.group - b.group);
+        const draws = available.map((t,i) => ({ team:t, group:assignments[i] }));
+        draws.sort((a,b) => a.group - b.group);
         return draws;
     }
 
@@ -448,12 +453,16 @@ function buildDrawQueue() {
 
 // ── INIT ──
 function init() {
-    totalTeams     = TEAMS.length;
-    drawHasStarted = false;
-    currentPot     = 1;
+    totalTeams = TEAMS.length;
+    phase      = 'idle';
+    drawIndex  = 0;
+    currentPot = 0;
+    locked     = false;
+    groups     = [[],[],[],[],[],[]];
+
     buildStreaks();
 
-    // Pot panel — show all 4 pots at start
+    // Pot panel: all 4 visible
     const panel = document.getElementById('pot-panel');
     panel.innerHTML = '';
     [1,2,3,4].forEach(pot => {
@@ -461,10 +470,10 @@ function init() {
         const block = document.createElement('div');
         block.className = 'pot-block';
         block.id = `pot-block-${pot}`;
-        let entries = teams.length
+        const entries = teams.length
             ? teams.map(t => `<div class="pot-entry" id="pi-${safeid(t.name)}">
-                    ${t.logo ? `<img src="${t.logo}" onerror="this.style.display='none'">` : ''}${t.name}
-               </div>`).join('')
+                ${t.logo ? `<img src="${t.logo}" onerror="this.style.display='none'">` : ''}${t.name}
+              </div>`).join('')
             : `<div class="pot-entry empty-entry">— No teams yet —</div>`;
         block.innerHTML = `
             <div class="pot-block-header">
@@ -477,10 +486,9 @@ function init() {
     // Groups grid
     const grid = document.getElementById('groups-grid');
     grid.innerHTML = '';
-    GROUPS.forEach((g, i) => {
+    GROUPS.forEach((g,i) => {
         const card = document.createElement('div');
-        card.className = 'group-card';
-        card.id = `group-card-${i}`;
+        card.className = 'group-card'; card.id = `group-card-${i}`;
         card.innerHTML = `
             <div class="group-card-header">
                 <span class="group-word">GROUP</span><span class="group-letter">&nbsp;${g}</span>
@@ -492,159 +500,249 @@ function init() {
     });
 
     // Reset center
-    const reveal = document.getElementById('team-reveal');
-    reveal.classList.remove('visible','exit');
+    hideReveal();
+    hidePotAnnounce();
     document.getElementById('center-wc-logo').classList.remove('hidden');
 
-    groups     = [[],[],[],[],[],[]];
-    drawIndex  = 0;
     if (TEAMS.length > 0) buildDrawQueue();
     updateProgress();
 
-    const hasTeams = TEAMS.length > 0;
-    document.getElementById('drawBtn').disabled = !hasTeams;
-    document.getElementById('status').innerText = hasTeams ? 'READY TO BEGIN DRAW' : 'ADD TEAMS TO BEGIN';
+    setActionBtn('Start Draw', true, TEAMS.length > 0);
+    document.getElementById('status').innerText = TEAMS.length > 0 ? 'PRESS START TO BEGIN' : 'ADD TEAMS TO BEGIN';
 }
 
+// ── BUTTON STATE ──
+function setActionBtn(label, pulse, enabled) {
+    const btn = document.getElementById('actionBtn');
+    btn.textContent = label;
+    btn.disabled = !enabled;
+    if (pulse && enabled) btn.classList.add('pulse');
+    else btn.classList.remove('pulse');
+}
+
+// ── PROGRESS ──
 function updateProgress() {
     document.getElementById('progress-bar').style.width =
         totalTeams > 0 ? (drawIndex / totalTeams * 100) + '%' : '0%';
 }
 
+// ── FLASH ──
 function flashEffect() {
     const f = document.getElementById('flash');
-    f.classList.remove('pop');
-    void f.offsetWidth;
-    f.classList.add('pop');
+    f.classList.remove('pop'); void f.offsetWidth; f.classList.add('pop');
 }
 
+// ── GROUP CARD HIGHLIGHT ──
 function highlightCard(gIdx) {
     document.querySelectorAll('.group-card').forEach(c => c.classList.remove('draw-target'));
     const card = document.getElementById(`group-card-${gIdx}`);
     if (card) { card.classList.add('draw-target'); setTimeout(() => card.classList.remove('draw-target'), 1400); }
 }
 
-// Switch pot panel to show only the active pot
+// ── POT PANEL SWITCH ──
 function activatePotPanel(pot) {
     for (let p = 1; p <= 4; p++) {
         const block = document.getElementById(`pot-block-${p}`);
         if (!block) continue;
-        if (p === pot) {
-            block.classList.remove('inactive');
-            block.classList.add('active-pot');
-        } else {
-            block.classList.remove('active-pot');
-            block.classList.add('inactive');
-        }
+        if (p === pot) { block.classList.remove('inactive'); block.classList.add('active-pot'); }
+        else           { block.classList.remove('active-pot'); block.classList.add('inactive'); }
     }
 }
 
-// Show team image in center
+function restoreAllPotPanels() {
+    for (let p = 1; p <= 4; p++) {
+        const block = document.getElementById(`pot-block-${p}`);
+        if (block) block.classList.remove('inactive','active-pot');
+    }
+}
+
+// ── CENTER VIEWS ──
+function showPotAnnounce(pot) {
+    document.getElementById('center-wc-logo').classList.add('hidden');
+    hideReveal();
+    document.getElementById('pot-announce-number').textContent = pot;
+    document.getElementById('pot-announce').classList.add('visible');
+}
+function hidePotAnnounce() {
+    document.getElementById('pot-announce').classList.remove('visible');
+}
+
+function hideReveal() {
+    const r = document.getElementById('team-reveal');
+    r.classList.remove('visible','exit');
+}
+
 function showTeamReveal(team, groupLetter) {
+    hidePotAnnounce();
+    document.getElementById('center-wc-logo').classList.add('hidden');
+
     const reveal  = document.getElementById('team-reveal');
     const imgEl   = document.getElementById('reveal-img');
     const nameEl  = document.getElementById('reveal-name');
     const groupEl = document.getElementById('reveal-group');
-    const wcLogo  = document.getElementById('center-wc-logo');
 
-    // Hide WC logo
-    wcLogo.classList.add('hidden');
+    function applyContent() {
+        if (team.image) {
+            imgEl.src = team.image;
+            imgEl.style.display = '';
+            imgEl.onerror = () => imgEl.style.display = 'none';
+        } else {
+            imgEl.style.display = 'none';
+        }
+        nameEl.textContent  = team.name;
+        groupEl.textContent = `→  GROUP ${groupLetter}`;
+    }
 
-    // If already visible, do a quick exit then re-enter
     if (reveal.classList.contains('visible')) {
         reveal.classList.add('exit');
         reveal.classList.remove('visible');
         setTimeout(() => {
             reveal.classList.remove('exit');
-            setRevealContent(imgEl, nameEl, groupEl, team, groupLetter);
+            applyContent();
             void reveal.offsetWidth;
             reveal.classList.add('visible');
-        }, 260);
+        }, 240);
     } else {
-        setRevealContent(imgEl, nameEl, groupEl, team, groupLetter);
+        applyContent();
         void reveal.offsetWidth;
         reveal.classList.add('visible');
     }
 }
 
-function setRevealContent(imgEl, nameEl, groupEl, team, groupLetter) {
-    if (team.image) {
-        imgEl.src = team.image;
-        imgEl.style.display = '';
-        imgEl.onerror = () => imgEl.style.display = 'none';
-    } else {
-        imgEl.style.display = 'none';
-    }
-    nameEl.textContent  = team.name;
-    groupEl.textContent = `→  GROUP ${groupLetter}`;
+// ── PLACE TEAM IN SLOT ──
+// Returns a promise that resolves after the slot animation finishes
+function placeTeamAnimated(team, gIdx) {
+    return new Promise(resolve => {
+        const slot = document.getElementById(`g${gIdx}-s${team.pot - 1}`);
+        if (!slot) { resolve(); return; }
+
+        slot.className = `slot p${team.pot} newly-drawn`;
+        slot.innerHTML = `${team.logo ? `<img src="${team.logo}" onerror="this.style.display='none'">` : ''}${team.name}`;
+
+        // Mark in pot list as current (briefly), then drawn
+        const pi = document.getElementById(`pi-${safeid(team.name)}`);
+        if (pi) { pi.classList.add('current'); }
+
+        flashEffect();
+        highlightCard(gIdx);
+        groups[gIdx].push(team);
+
+        setTimeout(() => {
+            slot.classList.remove('newly-drawn');
+            slot.classList.add('filled');
+            if (pi) { pi.classList.remove('current'); pi.classList.add('drawn'); }
+            resolve();   // animation done — caller can now show image
+        }, SLOT_ANIM_MS);
+    });
 }
 
-function placeTeam(team, gIdx) {
-    const slot = document.getElementById(`g${gIdx}-s${team.pot - 1}`);
-    if (!slot) return;
-    slot.className = `slot p${team.pot} newly-drawn`;
-    slot.innerHTML = `${team.logo ? `<img src="${team.logo}" onerror="this.style.display='none'">` : ''}${team.name}`;
-    setTimeout(() => { slot.classList.remove('newly-drawn'); slot.classList.add('filled'); }, 900);
+// ── MAIN ACTION HANDLER ──
+async function handleAction() {
+    if (locked) return;
 
-    // Mark drawn in pot panel
-    const pi = document.getElementById(`pi-${safeid(team.name)}`);
-    if (pi) {
-        pi.classList.add('drawn');
-        // Brief highlight before fading
-        pi.classList.add('just-drawn');
-        setTimeout(() => pi.classList.remove('just-drawn'), 1000);
+    if (phase === 'idle') {
+        // Find first pot that has teams
+        const firstPot = [1,2,3,4].find(p => teamsInPot(p).length > 0);
+        if (!firstPot) return;
+        currentPot = firstPot;
+        phase = 'pot-announce';
+        activatePotPanel(currentPot);
+        showPotAnnounce(currentPot);
+        document.getElementById('status').innerText = `POT ${currentPot}  —  PRESS DRAW`;
+        setActionBtn('Draw', true, true);
+        phase = 'drawing';
+        return;
     }
 
-    groups[gIdx].push(team);
-    highlightCard(gIdx);
-    flashEffect();
+    if (phase === 'drawing') {
+        // Find next item in queue that belongs to currentPot
+        if (drawIndex >= drawQueue.length) { checkPotComplete(); return; }
+
+        const entry = drawQueue[drawIndex];
+        if (entry.pot !== currentPot) { checkPotComplete(); return; }
+
+        locked = true;
+        setActionBtn('Draw', false, false);
+        drawIndex++;
+
+        await placeTeamAnimated(entry.team, entry.group);
+
+        // Slot is now filled — show reveal
+        showTeamReveal(entry.team, GROUPS[entry.group]);
+        document.getElementById('status').innerText = `${entry.team.name}  →  GROUP ${GROUPS[entry.group]}`;
+        updateProgress();
+
+        locked = false;
+
+        // Check if this pot is now exhausted
+        const remaining = drawQueue.slice(drawIndex).filter(d => d.pot === currentPot).length;
+        if (remaining === 0) {
+            checkPotComplete();
+        } else {
+            setActionBtn('Draw', true, true);
+        }
+        return;
+    }
+
+    if (phase === 'pot-done') {
+        // Advance to next pot
+        const nextPot = [1,2,3,4].find(p => p > currentPot && teamsInPot(p).length > 0);
+        if (!nextPot) {
+            // All pots done
+            phase = 'complete';
+            setActionBtn('Draw', false, false);
+            document.getElementById('status').innerText = '✦  DRAW COMPLETE  ✦';
+            return;
+        }
+        currentPot = nextPot;
+        phase = 'drawing';
+        activatePotPanel(currentPot);
+        showPotAnnounce(currentPot);
+        document.getElementById('status').innerText = `POT ${currentPot}  —  PRESS DRAW`;
+        setActionBtn('Draw', true, true);
+        return;
+    }
 }
 
-function drawNextTeam() {
-    if (drawIndex >= drawQueue.length) return;
-
-    const { team, group: gIdx, pot } = drawQueue[drawIndex++];
-
-    // On first draw, collapse to active pot only
-    if (!drawHasStarted) {
-        drawHasStarted = true;
-        currentPot = pot;
-        activatePotPanel(pot);
-    } else if (pot !== currentPot) {
-        // Pot changed — switch panel
-        currentPot = pot;
-        activatePotPanel(pot);
+function checkPotComplete() {
+    const remaining = drawQueue.slice(drawIndex).filter(d => d.pot === currentPot).length;
+    if (remaining === 0) {
+        const hasMore = [1,2,3,4].some(p => p > currentPot && teamsInPot(p).length > 0);
+        if (hasMore) {
+            phase = 'pot-done';
+            document.getElementById('status').innerText = `POT ${currentPot} COMPLETE  —  PRESS FOR POT ${[1,2,3,4].find(p => p > currentPot && teamsInPot(p).length > 0)}`;
+            setActionBtn('Next Pot', true, true);
+        } else {
+            phase = 'complete';
+            setActionBtn('Draw', false, false);
+            document.getElementById('status').innerText = '✦  DRAW COMPLETE  ✦';
+        }
     }
-
-    placeTeam(team, gIdx);
-    showTeamReveal(team, GROUPS[gIdx]);
-
-    document.getElementById('status').innerText = `${team.name}  →  GROUP ${GROUPS[gIdx]}`;
-    updateProgress();
-
-    if (drawIndex >= drawQueue.length) {
-        document.getElementById('drawBtn').disabled = true;
-        setTimeout(() => document.getElementById('status').innerText = '✦  DRAW COMPLETE  ✦', 700);
-    }
-}
-
-function drawAll() {
-    if (autoDrawInterval) return;
-    const delay = TEAMS.length <= 24 ? 380 : 240;
-    autoDrawInterval = setInterval(() => {
-        if (drawIndex >= drawQueue.length) { clearInterval(autoDrawInterval); autoDrawInterval = null; return; }
-        drawNextTeam();
-    }, delay);
 }
 
 function resetDraw() {
-    if (autoDrawInterval) { clearInterval(autoDrawInterval); autoDrawInterval = null; }
-    // Restore all pot blocks
-    for (let p = 1; p <= 4; p++) {
-        const block = document.getElementById(`pot-block-${p}`);
-        if (block) { block.classList.remove('inactive','active-pot'); }
-    }
+    locked = false;
+    restoreAllPotPanels();
     init();
+}
+
+// ── BACKGROUND STREAKS ──
+function buildStreaks() {
+    const c = document.getElementById('bg-streaks');
+    // Only add streaks once
+    if (c.querySelector('.streak')) return;
+    [
+        { bottom:'12%', left:'-5%',  width:'55%', angle:'-18deg', opacity:0.55 },
+        { bottom:'18%', left:'-5%',  width:'45%', angle:'-22deg', opacity:0.3  },
+        { bottom:'8%',  left:'-5%',  width:'40%', angle:'-14deg', opacity:0.2  },
+        { bottom:'28%', right:'-5%', width:'50%', angle:'16deg',  opacity:0.4, fromRight:true },
+        { bottom:'20%', right:'-5%', width:'38%', angle:'20deg',  opacity:0.2, fromRight:true },
+    ].forEach(s => {
+        const el = document.createElement('div');
+        el.className = 'streak';
+        el.style.cssText = `bottom:${s.bottom};${s.fromRight?`right:${s.right}`:`left:${s.left}`};width:${s.width};opacity:${s.opacity};transform:rotate(${s.angle});`;
+        c.appendChild(el);
+    });
 }
 
 init();
