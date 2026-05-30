@@ -122,7 +122,7 @@
 
         /* ── LEFT PANEL ── */
         .pot-panel {
-            width: 230px; flex-shrink: 0;
+            width: 270px; flex-shrink: 0;
             background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(10,8,5,0.9) 100%);
             border-right: 1px solid rgba(201,165,53,0.2);
             display: flex; flex-direction: column; overflow: hidden;
@@ -150,23 +150,23 @@
             background: rgba(0,0,0,0.5); flex-shrink: 0;
         }
         .pot-number-box {
-            font-family: 'Bebas Neue', sans-serif; font-size: 1.1em; letter-spacing: 2px;
-            color: #000; padding: 3px 10px; line-height: 1;
-            min-width: 60px; text-align: center;
+            font-family: 'Bebas Neue', sans-serif; font-size: 1.3em; letter-spacing: 2px;
+            color: #000; padding: 5px 14px; line-height: 1;
+            min-width: 70px; text-align: center;
         }
         .pot-entries {
             flex: 1; overflow: hidden; display: flex;
             flex-direction: column; justify-content: space-around; padding: 2px 0;
         }
         .pot-entry {
-            display: flex; align-items: center; height: 26px; padding: 0 8px;
-            font-size: 0.72em; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+            display: flex; align-items: center; height: 36px; padding: 0 12px;
+            font-size: 0.92em; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
             transition: opacity 0.5s, filter 0.5s, background 0.3s, border-color 0.3s;
             background: linear-gradient(90deg, rgba(201,165,53,0.08), transparent);
             border-left: 2px solid rgba(201,165,53,0.3);
             margin: 1px 4px 1px 0; white-space: nowrap; overflow: hidden;
         }
-        .pot-entry img { width: 22px; height: 15px; object-fit: contain; margin-right: 7px; flex-shrink: 0; }
+        .pot-entry img { width: 28px; height: 19px; object-fit: contain; margin-right: 10px; flex-shrink: 0; }
         .pot-entry.empty-entry { color: #333; font-style: italic; border-left-color: #222; }
         .pot-entry.drawn { opacity: 0.14; filter: grayscale(1); }
         .pot-entry.current {
@@ -226,19 +226,19 @@
         }
 
         .team-reveal-img {
-            max-height: 50%; max-width: 68%; object-fit: contain;
-            filter: drop-shadow(0 0 28px rgba(201,165,53,0.35));
+            max-height: 65%; max-width: 80%; object-fit: contain;
+            filter: drop-shadow(0 0 36px rgba(201,165,53,0.45));
         }
         .team-reveal-name {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5em; letter-spacing: 8px;
+            font-size: 3.6em; letter-spacing: 10px;
             color: var(--white);
-            text-shadow: 0 0 28px rgba(201,165,53,0.5);
+            text-shadow: 0 0 36px rgba(201,165,53,0.6);
             text-align: center; line-height: 1;
         }
         .team-reveal-group {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.05em; letter-spacing: 6px;
+            font-size: 1.4em; letter-spacing: 8px;
             color: var(--gold); text-align: center;
         }
 
@@ -267,22 +267,22 @@
             display: flex; align-items: center; padding: 0;
         }
         .group-letter {
-            font-family: 'Bebas Neue', sans-serif; font-size: 0.85em;
-            letter-spacing: 3px; color: var(--gold-lt); padding: 4px 8px; line-height: 1;
+            font-family: 'Bebas Neue', sans-serif; font-size: 1.1em;
+            letter-spacing: 3px; color: var(--gold-lt); padding: 5px 10px; line-height: 1;
         }
         .group-word {
-            font-size: 0.55em; letter-spacing: 2px; color: var(--gold-dk);
+            font-size: 0.7em; letter-spacing: 2px; color: var(--gold-dk);
             font-weight: 300; text-transform: uppercase; padding-left: 2px;
         }
         .slot {
-            display: flex; align-items: center; height: 28px; padding: 0 6px;
+            display: flex; align-items: center; height: 36px; padding: 0 8px;
             border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 0.68em; font-weight: 600; letter-spacing: 0.8px;
+            font-size: 0.82em; font-weight: 600; letter-spacing: 0.8px;
             text-transform: uppercase; white-space: nowrap; overflow: hidden;
             background: var(--slot-bg); transition: background 0.25s, color 0.25s;
         }
         .slot:last-child { border-bottom: none; }
-        .slot img { width: 20px; height: 13px; object-fit: contain; margin-right: 5px; flex-shrink: 0; }
+        .slot img { width: 26px; height: 17px; object-fit: contain; margin-right: 7px; flex-shrink: 0; }
         .slot.empty { background: linear-gradient(90deg, #161614, #111); color: #2e2e2e; }
         .slot-label { font-size: 0.8em; letter-spacing: 1px; color: #2a2a2a; font-weight: 400; }
         .slot.newly-drawn { background: #fff !important; color: #000 !important; font-weight: 700; }
@@ -407,7 +407,7 @@ const CONSTRAINTS = {
 // ═══════════════════════════════════════════════════════════════
 const GROUPS     = ['A','B','C','D','E','F'];
 const POT_COLORS = ['#c0392b','#2980b9','#27ae60','#8e44ad'];
-const SLOT_ANIM_MS = 900;   // how long the white flash holds before reveal
+const SLOT_ANIM_MS = 420;   // how long the white flash holds before reveal
 
 // ── State machine ──
 // phase: 'idle' | 'pot-announce' | 'drawing' | 'pot-done' | 'complete'
