@@ -122,10 +122,14 @@
 
         /* ── LEFT PANEL ── */
         .pot-panel {
-            width: 270px; flex-shrink: 0;
+            width: 260px; flex-shrink: 0;
             background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(10,8,5,0.9) 100%);
             border-right: 1px solid rgba(201,165,53,0.2);
             display: flex; flex-direction: column; overflow: hidden;
+            transition: width 0.4s ease;
+        }
+        .pot-panel.single-pot {
+            width: 220px;
         }
 
         .pot-block {
@@ -247,7 +251,7 @@
             position: relative; z-index: 5;
             background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.92));
             border-top: 2px solid rgba(201,165,53,0.35);
-            flex-shrink: 0; padding: 8px 12px 10px;
+            flex-shrink: 0; padding: 10px 14px 12px;
         }
         .progress-wrap { height: 2px; background: rgba(255,255,255,0.05); margin-bottom: 8px; }
         #progress-bar {
@@ -267,22 +271,22 @@
             display: flex; align-items: center; padding: 0;
         }
         .group-letter {
-            font-family: 'Bebas Neue', sans-serif; font-size: 1.1em;
-            letter-spacing: 3px; color: var(--gold-lt); padding: 5px 10px; line-height: 1;
+            font-family: 'Bebas Neue', sans-serif; font-size: 1.35em;
+            letter-spacing: 3px; color: var(--gold-lt); padding: 6px 12px; line-height: 1;
         }
         .group-word {
-            font-size: 0.7em; letter-spacing: 2px; color: var(--gold-dk);
+            font-size: 0.8em; letter-spacing: 2px; color: var(--gold-dk);
             font-weight: 300; text-transform: uppercase; padding-left: 2px;
         }
         .slot {
-            display: flex; align-items: center; height: 36px; padding: 0 8px;
+            display: flex; align-items: center; height: 42px; padding: 0 10px;
             border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 0.82em; font-weight: 600; letter-spacing: 0.8px;
+            font-size: 0.95em; font-weight: 600; letter-spacing: 0.8px;
             text-transform: uppercase; white-space: nowrap; overflow: hidden;
             background: var(--slot-bg); transition: background 0.25s, color 0.25s;
         }
         .slot:last-child { border-bottom: none; }
-        .slot img { width: 26px; height: 17px; object-fit: contain; margin-right: 7px; flex-shrink: 0; }
+        .slot img { width: 30px; height: 20px; object-fit: contain; margin-right: 8px; flex-shrink: 0; }
         .slot.empty { background: linear-gradient(90deg, #161614, #111); color: #2e2e2e; }
         .slot-label { font-size: 0.8em; letter-spacing: 1px; color: #2a2a2a; font-weight: 400; }
         .slot.newly-drawn { background: #fff !important; color: #000 !important; font-weight: 700; }
@@ -300,6 +304,103 @@
         }
         .draw-flash.pop { animation: flashpop 0.55s ease-out forwards; }
         @keyframes flashpop { 0% { opacity: 1; } 100% { opacity: 0; } }
+        /* ── RESULTS OVERLAY ── */
+        .results-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -5%, rgba(201,165,53,0.1) 0%, transparent 60%),
+                repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(201,165,53,0.025) 60px),
+                repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(201,165,53,0.025) 60px);
+            display: flex; flex-direction: column;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+        .results-overlay.visible { opacity: 1; pointer-events: all; }
+
+        .results-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 28px;
+            border-bottom: 1px solid rgba(201,165,53,0.25);
+            background: rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+        .results-header-left { display: flex; align-items: center; gap: 14px; }
+        .results-header-left img { height: 48px; }
+        .results-header-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2em; letter-spacing: 7px; color: var(--gold-lt); line-height: 1;
+        }
+        .results-header-sub {
+            font-size: 0.65em; letter-spacing: 4px; color: var(--gold-dk);
+            font-weight: 300; text-transform: uppercase;
+        }
+        .results-close {
+            font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; font-size: 0.9em;
+            background: transparent; border: 1px solid rgba(201,165,53,0.5);
+            color: var(--gold); padding: 7px 20px; cursor: pointer;
+            clip-path: none;
+        }
+        .results-close:hover { background: rgba(201,165,53,0.1); }
+
+        .results-body {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 24px 28px;
+            overflow: hidden;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 14px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .results-card {
+            background: linear-gradient(180deg, #161410, #0e0c0a);
+            border: 1px solid rgba(201,165,53,0.22);
+            display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .results-card.appear { opacity: 1; transform: translateY(0); }
+
+        .results-card-header {
+            background: linear-gradient(90deg, #1f1a0e, #2c2210);
+            border-bottom: 2px solid var(--gold);
+            display: flex; align-items: center; padding: 10px 14px; gap: 8px;
+        }
+        .results-card-word {
+            font-size: 0.7em; letter-spacing: 3px; color: var(--gold-dk);
+            font-weight: 300; text-transform: uppercase;
+        }
+        .results-card-letter {
+            font-family: 'Bebas Neue', sans-serif; font-size: 1.8em;
+            letter-spacing: 4px; color: var(--gold-lt); line-height: 1;
+        }
+
+        .results-team {
+            display: flex; align-items: center;
+            padding: 0 14px;
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .results-team:last-child { border-bottom: none; }
+        .results-team img {
+            width: 32px; height: 22px; object-fit: contain;
+            margin-right: 12px; flex-shrink: 0;
+        }
+        .results-team-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1em; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--white);
+        }
+        .results-pot-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            margin-left: auto; flex-shrink: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -563,6 +664,7 @@ function highlightCard(gIdx) {
 
 // ── POT PANEL SWITCH ──
 function activatePotPanel(pot) {
+    document.getElementById('pot-panel').classList.add('single-pot');
     for (let p = 1; p <= 4; p++) {
         const block = document.getElementById(`pot-block-${p}`);
         if (!block) continue;
@@ -572,6 +674,7 @@ function activatePotPanel(pot) {
 }
 
 function restoreAllPotPanels() {
+    document.getElementById('pot-panel').classList.remove('single-pot');
     for (let p = 1; p <= 4; p++) {
         const block = document.getElementById(`pot-block-${p}`);
         if (block) block.classList.remove('inactive','active-pot');
@@ -706,13 +809,18 @@ async function handleAction() {
         return;
     }
 
+    if (phase === 'complete') {
+        showResults();
+        return;
+    }
+
     if (phase === 'pot-done') {
         // Advance to next pot
         const nextPot = [1,2,3,4].find(p => p > currentPot && teamsInPot(p).length > 0);
         if (!nextPot) {
             // All pots done
             phase = 'complete';
-            setActionBtn('Draw', false, false);
+            setActionBtn('View Groups', true, true);
             document.getElementById('status').innerText = '✦  DRAW COMPLETE  ✦';
             return;
         }
@@ -736,10 +844,57 @@ function checkPotComplete() {
             setActionBtn('Next Pot', true, true);
         } else {
             phase = 'complete';
-            setActionBtn('Draw', false, false);
+            setActionBtn('View Groups', true, true);
             document.getElementById('status').innerText = '✦  DRAW COMPLETE  ✦';
         }
     }
+}
+
+
+// ── RESULTS SCREEN ──
+function showResults() {
+    const overlay = document.getElementById('results-overlay');
+    const grid    = document.getElementById('results-grid');
+    grid.innerHTML = '';
+
+    GROUPS.forEach((letter, gIdx) => {
+        const card = document.createElement('div');
+        card.className = 'results-card';
+        const teams = groups[gIdx];
+
+        let teamsHTML = '';
+        for (let i = 0; i < 4; i++) {
+            const t = teams[i];
+            if (t) {
+                teamsHTML += `<div class="results-team">
+                    ${t.logo ? `<img src="${t.logo}" onerror="this.style.display='none'">` : ''}
+                    <span class="results-team-name">${t.name}</span>
+                    <div class="results-pot-dot" style="background:${POT_COLORS[t.pot-1]}"></div>
+                </div>`;
+            } else {
+                teamsHTML += `<div class="results-team"><span class="results-team-name" style="color:#333">—</span></div>`;
+            }
+        }
+
+        card.innerHTML = `
+            <div class="results-card-header">
+                <span class="results-card-word">Group</span>
+                <span class="results-card-letter">${letter}</span>
+            </div>
+            ${teamsHTML}`;
+        grid.appendChild(card);
+
+        // Stagger entrance animation
+        setTimeout(() => card.classList.add('appear'), gIdx * 80 + 50);
+    });
+
+    overlay.classList.add('visible');
+}
+
+function closeResults() {
+    document.getElementById('results-overlay').classList.remove('visible');
+    // Re-enable view groups button
+    setActionBtn('View Groups', true, true);
 }
 
 function resetDraw() {
@@ -769,5 +924,22 @@ function buildStreaks() {
 
 init();
 </script>
+
+<!-- RESULTS OVERLAY -->
+<div class="results-overlay" id="results-overlay">
+    <div class="results-header">
+        <div class="results-header-left">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/250px-2026_FIFA_World_Cup_emblem.svg.png" onerror="this.style.display='none'">
+            <div>
+                <div class="results-header-title">ACSF World Cup 2026</div>
+                <div class="results-header-sub">Group Stage Draw Results</div>
+            </div>
+        </div>
+        <button class="results-close" onclick="closeResults()">← Back to Draw</button>
+    </div>
+    <div class="results-body">
+        <div class="results-grid" id="results-grid"></div>
+    </div>
+</div>
 </body>
 </html>
