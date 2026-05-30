@@ -371,9 +371,29 @@
 //    USA       → cannot be in E or F  [4,5]
 // ═══════════════════════════════════════════════════════════════
 const TEAMS = [
-    // { name: "USA",       logo: "https://...", image: "https://...", pot: 1 },
-    // { name: "Argentina", logo: "https://...", image: "https://...", pot: 2 },
-    // { name: "Poland",    logo: "https://...", image: "https://...", pot: 3 },
+    // ── POT ASSIGNMENTS TBD — update pot: values once confirmed ──
+    { name: "France",      logo: "https://upload.wikimedia.org/wikipedia/en/2/23/French_Football_Federation_logo.svg", image: "https://assets.goal.com/images/v3/blte4e0bc0e3a8e96c3/Equipe_de_France_Coupe_du_monde_2022_Kylian_Mbapp%C3%A9.png?auto=webp&format=pjpg&width=3840&quality=60", pot: 1 },
+    { name: "Argentina",   logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Argentina_national_football_team_logo.svg/960px-Argentina_national_football_team_logo.svg.png", image: "https://www.reuters.com/resizer/v2/UEFAJHVSHVOPTJKIWNYHVT4ZHY.jpg?auth=1d2580e78ecc8c87a57d7df1df6dd5787c65f7bca2090a71273a993be48b2b1e", pot: 1 },
+    { name: "England",     logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/England_national_football_team_crest.svg/960px-England_national_football_team_crest.svg.png", image: "https://ichef.bbci.co.uk/ace/standard/3840/cpsprodpb/5b78/live/c9362eb0-c31b-11f0-8036-1f33f0e1199f.jpg", pot: 1 },
+    { name: "Morocco",     logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d0/Royal_Moroccan_Football_Federation_logo.svg/960px-Royal_Moroccan_Football_Federation_logo.svg.png", image: "https://media.cnn.com/api/v1/images/stellar/prod/221213113800-01-morocco-world-cup-football-sports.jpg?c=original", pot: 1 },
+    { name: "Germany",     logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e3/DFBEagle.svg/250px-DFBEagle.svg.png", image: "https://res.cloudinary.com/dfb-de/image/fetch/c_fill,g_faces:center,h_910,w_1600/q_auto/f_auto/https://assets.dfb.de/uploads/000/309/794/original_Ger16.jpeg%3F1725998496", pot: 1 },
+    { name: "Croatia",     logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/84/Croatian_Football_Federation_logo.svg/960px-Croatian_Football_Federation_logo.svg.png", image: "https://www.usatoday.com/gcdn/authoring/authoring-images/2025/12/03/USAT/87589719007-20251203-t-123440-z-608084322-rc-2-xh-8-agrgq-2-rtrmadp-3-soccerworldcupteams.JPG?crop=2290,1289,x0,y112&width=660&height=371&format=pjpg&auto=webp", pot: 1 },
+    { name: "USA",         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/United_States_Soccer_Federation_logo.svg/960px-United_States_Soccer_Federation_logo.svg.png", image: "https://platform.starsandstripesfc.com/wp-content/uploads/sites/151/2026/03/gettyimages-2268799332.jpg?quality=90&strip=all&crop=0%2C0.020408163265301%2C100%2C99.959183673469&w=2400", pot: 1 },
+    { name: "Poland",      logo: "https://upload.wikimedia.org/wikipedia/commons/c/c9/Herb_Polski.svg", image: "https://pzpn.pl/public/system/images/articles/12522/17175-mini-3.jpg", pot: 1 },
+    { name: "Sweden",      logo: "https://upload.wikimedia.org/wikipedia/en/3/3f/Sweden_national_football_team_badge.svg", image: "https://static01.nyt.com/athletic/uploads/wp/2026/03/31171102/GettyImages-2269285711-scaled-e1774991515414.jpg?width=1200&height=630&fit=cover", pot: 1 },
+    { name: "Japan",       logo: "https://upload.wikimedia.org/wikipedia/en/8/84/Japan_national_football_team_crest.svg", image: "https://media.cnn.com/api/v1/images/stellar/prod/2025-03-20t120736z-475800000-up1el3k0xonbt-rtrmadp-3-soccer-worldcup-jpn-bhr-report.JPG?c=original", pot: 1 },
+    { name: "Ecuador",     logo: "https://upload.wikimedia.org/wikipedia/en/b/ba/Ecuador_national_football_team.png", image: "https://urbanpitch.com/wp-content/uploads/2022/09/ecuador.jpg", pot: 1 },
+    { name: "Spain",       logo: "https://upload.wikimedia.org/wikipedia/en/thumb/3/39/Spain_national_football_team_crest.svg/960px-Spain_national_football_team_crest.svg.png", image: "https://www.westernslopenow.com/wp-content/uploads/sites/95/2024/07/668d9c423b2075.74851586.jpeg?w=2560&h=1440&crop=1", pot: 1 },
+    { name: "Netherlands", logo: "https://upload.wikimedia.org/wikipedia/en/7/78/Netherlands_national_football_team_logo.svg", image: "https://a.espncdn.com/photo/2025/1117/r1576939_1296x518_5-2.jpg", pot: 1 },
+    { name: "Canada",      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Canadian_Soccer_Association_logo.svg/1280px-Canadian_Soccer_Association_logo.svg.png", image: "https://www.theglobeandmail.com/resizer/v2/6XCGNCQTWVO7XOQWQXLHKYY5XY.jpg?auth=da9c97b8e558a54297c75efe29553ad192e1b0fed43eb3f7fd5928e2d31aa74f&width=600&quality=80", pot: 1 },
+    { name: "Italy",       logo: "https://upload.wikimedia.org/wikipedia/commons/b/bf/Logo_Italy_National_Football_Team_-_2023.svg", image: "https://static01.nyt.com/images/2021/07/06/sports/06onsoccer4/06onsoccer4-mediumSquareAt3X.jpg", pot: 1 },
+    { name: "Colombia",    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/FCF-Logo-2023.svg/1280px-FCF-Logo-2023.svg.png", image: "https://a.espncdn.com/photo/2026/0203/r1609953_1296x864_3-2.jpg", pot: 1 },
+    { name: "Portugal",    logo: "https://upload.wikimedia.org/wikipedia/en/6/64/Portuguese_Football_Federation_logo.svg", image: "https://images2.minutemediacdn.com/image/upload/c_crop,x_175,y_84,w_3259,h_1833/c_fill,w_1440,ar_1440:810,f_auto,q_auto,g_auto/images/voltaxMediaLibrary/mmsport/si/01jwyd12nvnxspj13tfb.jpg", pot: 1 },
+    { name: "Brazil",      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Confedera%C3%A7%C3%A3o_Brasileira_de_Futebol_logo_%282020%29.svg/250px-Confedera%C3%A7%C3%A3o_Brasileira_de_Futebol_logo_%282020%29.svg.png", image: "https://www.fanduel.com/research/theduel/images/duel/01gjdkwg9ec6p1wh1yyq.jpg", pot: 1 },
+    { name: "Norway",      logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6c/Norway_national_football_team_logo.svg/960px-Norway_national_football_team_logo.svg.png", image: "https://static01.nyt.com/athletic/uploads/wp/2025/10/12074735/GettyImages-2240004132-scaled.jpg?width=1200&height=1200&fit=cover", pot: 1 },
+    { name: "Senegal",     logo: "https://upload.wikimedia.org/wikipedia/en/1/16/Senegalese_Football_Federation_logo.svg", image: "https://www.reuters.com/resizer/v2/6XLKBX6P4FJQXPWRNWF3RGKGUA.jpg?auth=8e321d375744037ded4d86810968f1c37533041a256fba55c9fc00b0ce1fa000&width=1080&quality=80", pot: 1 },
+    { name: "Uruguay",     logo: "https://logodownload.org/wp-content/uploads/2021/09/auf-seleccion-de-futbol-de-uruguay-logo-3.png", image: "https://a4.espncdn.com/combiner/i?img=%2Fphoto%2F2024%2F0629%2Fr1352300_1296x729_16%2D9.jpg", pot: 1 },
+    // ── 3 more teams coming soon ──
 ];
 
 const CONSTRAINTS = {
@@ -431,8 +451,9 @@ function buildDrawQueue() {
             return false;
         }
         if (!bt(0)) return false;
-        // Keep the shuffled order from `available` — do NOT sort by group
-        return available.map((t,i) => ({ team:t, group:assignments[i] }));
+        const draws = available.map((t,i) => ({ team:t, group:assignments[i] }));
+        draws.sort((a,b) => a.group - b.group);
+        return draws;
     }
 
     for (let attempt = 0; attempt < 20; attempt++) {
