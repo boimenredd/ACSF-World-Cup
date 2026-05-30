@@ -431,9 +431,8 @@ function buildDrawQueue() {
             return false;
         }
         if (!bt(0)) return false;
-        const draws = available.map((t,i) => ({ team:t, group:assignments[i] }));
-        draws.sort((a,b) => a.group - b.group);
-        return draws;
+        // Keep the shuffled order from `available` — do NOT sort by group
+        return available.map((t,i) => ({ team:t, group:assignments[i] }));
     }
 
     for (let attempt = 0; attempt < 20; attempt++) {
