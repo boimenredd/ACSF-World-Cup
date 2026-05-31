@@ -530,6 +530,14 @@ const CONSTRAINTS = {
 
 
 // ── MANAGERS ──
+// ── TEAM ROLES (Manager vs Streamer) ──
+const TEAM_ROLES = {
+    "Denmark":       "Streamer",
+    "Australia":     "Streamer",
+    "Korea Republic":"Streamer",
+};
+function getRole(name) { return TEAM_ROLES[name] || (MANAGERS[name] ? 'Manager' : ''); }
+
 const MANAGERS = {"France": "@GreenDray", "Argentina": "@boimenred", "England": "@deanoss", "Morocco": "@splasher", "Germany": "@Doom", "Croatia": "@Aru_04", "USA": "@Coco", "Poland": "@Global Sports Asset Optimization", "Sweden": "@sp3der_19", "Japan": "@therios", "Ecuador": "@ChairmanMoi", "Spain": "@bleeding", "Netherlands": "@Timber'sBurner | Kampioenen!", "Canada": "@jjettasfishy", "Italy": "@Nicame555", "Colombia": "@🇸🇻", "Portugal": "@M", "Brazil": "@DeadPoole", "Norway": "@AscensionOfAres", "Senegal": "@jewshasi", "Uruguay": "@pennywiseLA25"};
 
 // ═══════════════════════════════════════════════════════════════
@@ -747,7 +755,7 @@ function showTeamReveal(team, groupLetter) {
         const lbl = document.getElementById('reveal-streamer-label');
         const mgrName = MANAGERS[team.name] || '';
         if (mgr) mgr.textContent = mgrName;
-        if (lbl) lbl.textContent = mgrName ? 'Streamer' : '';
+        if (lbl) lbl.textContent = mgrName ? getRole(team.name) : '';
     }
 
     if (reveal.classList.contains('visible')) {
@@ -900,7 +908,7 @@ function showResults() {
             if (t) {
                 teamsHTML += `<div class="results-team">
                     ${t.logo ? `<img src="${t.logo}" onerror="this.style.display='none'">` : ''}
-                    <div><span class="results-team-name">${t.name}</span><br>${MANAGERS[t.name] ? `<span class="results-team-manager">Streamer: ${MANAGERS[t.name]}</span>` : ''}</div>
+                    <div><span class="results-team-name">${t.name}</span><br>${MANAGERS[t.name] ? `<span class="results-team-manager">${getRole(t.name)}: ${MANAGERS[t.name]}</span>` : ''}</div>
                     <div class="results-pot-dot" style="background:${POT_COLORS[t.pot-1]}"></div>
                 </div>`;
             } else {
