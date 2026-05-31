@@ -245,6 +245,22 @@
             font-size: 1.4em; letter-spacing: 8px;
             color: var(--gold); text-align: center;
         }
+        .team-reveal-streamer-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.7em; letter-spacing: 5px;
+            color: var(--gold-dk);
+            text-align: center;
+            margin-bottom: -6px;
+        }
+        .team-reveal-manager {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.15em; letter-spacing: 3px;
+            color: rgba(240,237,232,0.55);
+            text-align: center;
+            font-weight: 300;
+            font-style: italic;
+        }
+
 
         /* ── BOTTOM GROUPS ── */
         .groups-panel {
@@ -396,6 +412,11 @@
             font-size: 1em; font-weight: 700; letter-spacing: 1px;
             text-transform: uppercase; color: var(--white);
         }
+        .results-team-manager {
+            font-size: 0.72em; color: rgba(240,237,232,0.4);
+            font-style: italic; font-weight: 300; letter-spacing: 0.5px;
+            display: block; margin-top: 1px;
+        }
         .results-pot-dot {
             width: 7px; height: 7px; border-radius: 50%;
             margin-left: auto; flex-shrink: 0;
@@ -449,6 +470,8 @@
             <img class="team-reveal-img" id="reveal-img" src="" alt="">
             <div class="team-reveal-name" id="reveal-name"></div>
             <div class="team-reveal-group" id="reveal-group"></div>
+            <div class="team-reveal-streamer-label" id="reveal-streamer-label"></div>
+            <div class="team-reveal-manager" id="reveal-manager"></div>
         </div>
     </div>
 </div>
@@ -504,6 +527,10 @@ const CONSTRAINTS = {
     "Argentina": [2, 3],
     "USA":       [4, 5],
 };
+
+
+// ── MANAGERS ──
+const MANAGERS = {"France": "@GreenDray", "Argentina": "@boimenred", "England": "@deanoss", "Morocco": "@splasher", "Germany": "@Doom", "Croatia": "@Aru_04", "USA": "@Coco", "Poland": "@Global Sports Asset Optimization", "Sweden": "@sp3der_19", "Japan": "@therios", "Ecuador": "@ChairmanMoi", "Spain": "@bleeding", "Netherlands": "@Timber'sBurner | Kampioenen!", "Canada": "@jjettasfishy", "Italy": "@Nicame555", "Colombia": "@🇸🇻", "Portugal": "@M", "Brazil": "@DeadPoole", "Norway": "@AscensionOfAres", "Senegal": "@jewshasi", "Uruguay": "@pennywiseLA25"};
 
 // ═══════════════════════════════════════════════════════════════
 const GROUPS     = ['A','B','C','D','E','F'];
@@ -714,8 +741,13 @@ function showTeamReveal(team, groupLetter) {
         } else {
             imgEl.style.display = 'none';
         }
-        nameEl.textContent  = team.name;
-        groupEl.textContent = `→  GROUP ${groupLetter}`;
+        nameEl.textContent    = team.name;
+        groupEl.textContent   = `→  GROUP ${groupLetter}`;
+        const mgr = document.getElementById('reveal-manager');
+        const lbl = document.getElementById('reveal-streamer-label');
+        const mgrName = MANAGERS[team.name] || '';
+        if (mgr) mgr.textContent = mgrName;
+        if (lbl) lbl.textContent = mgrName ? 'Streamer' : '';
     }
 
     if (reveal.classList.contains('visible')) {
@@ -868,7 +900,7 @@ function showResults() {
             if (t) {
                 teamsHTML += `<div class="results-team">
                     ${t.logo ? `<img src="${t.logo}" onerror="this.style.display='none'">` : ''}
-                    <span class="results-team-name">${t.name}</span>
+                    <div><span class="results-team-name">${t.name}</span><br>${MANAGERS[t.name] ? `<span class="results-team-manager">Streamer: ${MANAGERS[t.name]}</span>` : ''}</div>
                     <div class="results-pot-dot" style="background:${POT_COLORS[t.pot-1]}"></div>
                 </div>`;
             } else {
